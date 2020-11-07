@@ -1,2 +1,2 @@
 # Tarea_4
-Hice ahí lo que se me ocurrió, todavía los histogramas no me gustan nada, voy a preguntarle a Beatriz esta semana sobre eso. Ahí hablamos!
+Chicas ahí subí mi parte, no he hecho el Markdown pero con eso pueden seguir!
