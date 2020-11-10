@@ -110,6 +110,54 @@ Nuestros resultados indican varias cosas, que nuestro modelo explica  un 49% de 
 
 Es posible concluir que las variables H1, H2 y H4 tienen efecto sobre la diversidad genética de los pájaros en las diferentes poblaciones.
 
+#### Corrección de la trampa 1
+
+Este es un caso tipico de pseudoreplicación, donde tenemos una inflación del tamaño de muestra  si utilizamos los pájaros como unidad de muestreo. No se deben usar los individuos como unidad de muestreo ya que entre ellos son dependientes. La unidad de muestreo que realmente es independiente entre sí, son las poblaciones. De esta forma se realiza o el promedio de los individuos por población o bien un modelo mixto utilizando como interacción las poblaciones. 
+
+En este caso, estaríamos pasando de un tamaño de muestra de 600 a 60. A su vez, a la hora de reportar una significacia es importante acoplar el valor de p. Y tambiénn es importante reportar los resultados junto con el valor de incertidumbre asociado a los resultados obtenidos, en este caso a utilizar el error estándar. 
+
+```{r}
+M.1_Correccion <- lmer(D ~ L + H1 + H2 + H3 + H4+ H5 + (1|P), data = Datos_tarea4)
+S.2<-summary(M.1_Correccion)
+```
+
+```{r}
+
+#Se crean vectores vacíos
+#Efecto estimado
+V.m1 <- NULL
+V.m2 <- NULL
+
+#Error estandar del efecto estimado
+V.s1 <- NULL
+V.s2 <- NULL
+
+V.m1 <- append(V.m1, S.1$coefficients[2, 1])
+V.s1 <- append(V.s1, S.1$coefficients[2, 2])
+
+V.m2 <- append(V.m2, S.2$coefficients[2, 1])
+V.s2 <- append(V.s2, S.2$coefficients[2, 2])
+
+Cuadro.Comparativo<- 
+  data.frame(
+  "Modelo" = c("Numero total de pajaros", "Modelo Mixto"), #Se realiza un cuadro para ver las diferencias entre los valores de promedios de residuos y errores estándar
+  "Efecto promedio" =c(V.m1, V.m2),
+  "Desviacion estandar" =c(V.s1, V.s2))
+Cuadro.Comparativo
+```
+
+
+Como se puede observar en el cuadro, el valor de beta, el promedio de los residuos es el mismo pero la desviación estándar varía entre los dos modelos. Siendo mucho menor la desviación estándar cuando realizo pseudoreplicación. Es decir estaría falsamente mas segura de mi resultado, cuando en realidad tiene mayor incertidumbre.
+
+Por último se pueden comparar los intervalos de confianza, para comprobar lo anterior para cada una de las variables estudiadas.
+```{r}
+Inter.trampa <- confint(M.1)
+Inter.correccion <- confint(M.1_Correccion)
+Inter.trampa
+Inter.correccion
+```
+
+Se puede notar que los intervalos de confianza son mas grandes para el modelo lineal mixto que para el modelo lineal simple.
 
 &nbsp;
 -------
@@ -167,14 +215,14 @@ Zona_tropical_N <- data.frame(Zona_tropical_N)
 
 Para los modelos se utiliza el paquete [lmerTest](https://cran.r-project.org/web/packages/lmerTest/lmerTest.pdf). A su vez, la interpretación es apoyada por [este artículo](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0084162#s3) donde se utiliza e interpreta un modelo lineal mixto.   
 
-##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas templadas
+##### -Modelo para ver el efecto de la degradación del hábitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas templadas
 ```{r}
 library(lmerTest) #Se utiliza el paquete para comparar valores de p de las variables entre modelos
 M.Templado<- lmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_templada_N)
 summary(M.Templado)
 ```
 
-##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas tropicales
+##### -Modelo para ver el efecto de la degradación del hábitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas tropicales
 ```{r}
 M.Tropical <- lmer(D ~ L + H1 + H2 + H3 + H4+ H5 + (1|P), data = Zona_tropical_N)
 summary(M.Tropical)
