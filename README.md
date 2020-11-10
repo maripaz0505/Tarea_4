@@ -3,5 +3,5 @@ Este repositorio tiene como objetivo trabajar grupalmente en la tarea 4 del curs
 Integrantes del grupo: 
 
 Maripaz Castro-Murillo, 
-Galit Akerman-Sánchez, B60168, johass98@gmail.com
+Galit Akerman-Sánchez,
 Andrea Romero-, 
