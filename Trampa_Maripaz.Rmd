@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include=TRUE, echo=FALSE}
+```{r, include=FALSE, echo=FALSE}
 library(ggdag)
 library(lme4)
 library(ggplot2)
@@ -128,14 +128,14 @@ head(Datos_tarea4) #La base con la variable nueva L.o integrada
 
 Podemos observar que el punto máximo es de 47.40 y el mínimo de -0.80. Es importante aclarar que revertir esta variable a su forma normal y no centrada en cero, no afecta en nada los resultados del experimento. Este acto fue realizado para poder separar aquellos individuos que se encuentran en zonas templadas y aquellos en zonas tropicales. 
 
-Ahora bien, se tomara como referencia el trópico de cáncer que se encuentra a 23.5 grados. Se puede confirmar ingresando al siguiente enlace [Coordenadas  Trópico de Cáncer](https://es.wikipedia.org/wiki/Tr%C3%B3pico_de_C%C3%A1ncer). Donde a valores en la variable L.o mas altos que 23.5, se tomaran como zona templada, y mas bajo que 23.5 como zona tropical. 
+Ahora bien, se tomara como referencia el trópico de cáncer que se encuentra a 23.5 grados. Se puede confirmar ingresando al siguiente enlace [Coordenadas  Trópico de Cáncer](https://es.wikipedia.org/wiki/Tr%C3%B3pico_de_C%C3%A1ncer). Donde a valores en la variable L.o más altos que 23.5, se tomaran como zona templada, y más bajo que 23.5 como zona tropical. 
 
 ```{r}
 Zona_templada<- subset(x = Datos_tarea4, subset = L.o > 23.5)
 Zona_tropical<- subset(x = Datos_tarea4, subset = L.o < 23.5)
 ```
 
-A continuación se realizan gráficos con los grupos de zona templada y zona tropical. Primero se genera la variable categórica de Zona.  
+A continuación, se realizan gráficos con los grupos de zona templada y zona tropical. Primero se genera la variable categórica de Zona.  
 ```{r}
 Datos_tarea4$Zona <- ifelse(Datos_tarea4$L.o > 23.5, 1, 0) #Donde 1 son zonas templadas y 0 son zonas tropicales
 Datos_tarea4$Zona <- as.character(Datos_tarea4$Zona)
@@ -191,3 +191,94 @@ Los resultados anteriores demuestran como en las zonas templadas, todos los indi
 
 
 #### **-Trampa 3**
+
+El objetivo de este análisis es comparar el efecto individual de cada variable indicadora de degradación de hábitat sobre la diversidad alélica del CMH-1 de *P. pajaritus* de acuerdo con su distribución (i.e. zona templada y zona tropical).
+
+Inicialmente, se establece la distribución de la población en dos modelos: (1) zona templada mayor a 23.5 grados y (2) zona tropical menor a 23.5 grados, tomando como referencia el trópico de cáncer que se encuentra a 23.5 grados.
+
+```{r}
+Datos_tarea4$L.o <- Datos_tarea4$L*10 + 20 #datos originales en grados
+summary(Datos_tarea4$L.o)
+
+Zona_templada<- subset(x = Datos_tarea4, subset = L.o > 23.5)
+Zona_tropical<- subset(x = Datos_tarea4, subset = L.o < 23.5)
+```
+
+Luego, se evalúa el efecto de cada indicador de degradación de hábitat sobre la diversidad alélica del CMH-1 tanto en las zonas tropicales como en las zonas templadas previamente establecidas.
+
+##### **Efecto de la degradacion del hábitat en la diversidad alélica para poblaciones en zonas tropicales**
+
+Indicador de degradación de hábitat 1 (H1):
+```{r}
+M.1 <- lm(D ~ L + H1, data = Zona_tropical)
+S.1 <- summary(M.1)
+S.1
+```
+
+Indicador de degradación de hábitat 2 (H2):
+```{r}
+M.2 <- lm(D ~ L + H2, data = Zona_tropical)
+S.2 <- summary(M.2)
+S.2
+```
+
+Indicador de degradación de hábitat 3 (H3):
+```{r}
+M.3 <- lm(D ~ L + H3, data = Zona_tropical)
+S.3 <- summary(M.3)
+S.3
+```
+
+Indicador de degradación de hábitat 4 (H4):
+```{r}
+M.4 <- lm(D ~ L + H4, data = Zona_tropical)
+S.4 <- summary(M.4)
+S.4
+```
+
+Indicador de degradación de hábitat 5 (H5):
+```{r}
+M.5 <- lm(D ~ L + H5, data = Zona_tropical)
+S.5 <- summary(M.5)
+S.5
+```
+
+##### **Efecto de la degradacion del hábitat en la diversidad alélica para poblaciones en zonas templadas**
+
+Indicador de degradación de hábitat 1 (H1):
+```{r}
+M.6 <- lm(D ~ L + H1, data = Zona_templada)
+S.6 <- summary(M.6)
+S.6
+```
+
+Indicador de degradación de hábitat 2 (H2):
+```{r}
+M.7 <- lm(D ~ L + H2, data = Zona_templada)
+S.7 <- summary(M.7)
+S.7
+```
+
+Indicador de degradación de hábitat 3 (H3):
+```{r}
+M.8 <- lm(D ~ L + H3, data = Zona_templada)
+S.8 <- summary(M.8)
+S.8
+```
+
+Indicador de degradación de hábitat 4 (H4):
+```{r}
+M.9 <- lm(D ~ L + H4, data = Zona_templada)
+S.9 <- summary(M.9)
+S.9
+```
+
+Indicador de degradación de hábitat 5 (H5):
+```{r}
+M.10 <- lm(D ~ L + H5, data = Zona_templada)
+S.10 <- summary(M.10)
+S.10
+```
+
+#### Interpretación de resultado
+De acuerdo con los resultados, las varibles H1, H4 y H5 afectan **significativamente** la diversidad alélica del CMH1- de *P. pajaritus* en las zonas tropicales. No obstante, las variables H1-H4 tienen un efecto **significativo** sobre la diversidad alélica de *P. pajaritus* en zonas templadas. Por lo tanto, se sugiere que las variables **H2** y **H3** tienen un efecto más importante sobre la diversidad alélica en zonas templadas que en zonas tropicales; en cambio, la variable **H5** es un indicador de mayor importancia sobre la diversidad alélica del CMH-1 en las zonas tropicales que en zonas templadas.
