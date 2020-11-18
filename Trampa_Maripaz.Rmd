@@ -173,7 +173,7 @@ summary(M.Tropical)
 
 #### Interpretación de resultado
 
-Los resultados anteriores demuestran como en las zonas templadas,  los indicadores de degradación del hábitat  H1 (se= -3.41, t-value= -7.57, p-value= 6.11e^-13^), H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^), H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) y H4 (se= -6.90, t-value= -14.70, p-value= 2e^-16^) afectan negativamente la diversidad alélica de los pájaros mas que en las zonas tropicales. Mientras que en las zonas tropicales H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta positivamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* mas que en las zonas templadas. 
+Los resultados anteriores demuestran como  los indicadores de degradación del hábitat H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^) y H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) tienen significativamente un mayor efecto (de manera negativa) sobre la diversidad alelica en las poblaciones templadas que en las tropicales. Por otro lado, el indicador H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta significativamente (de manera positiva) mas la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* de zonas tropicales que en templadas.
 
 
 
