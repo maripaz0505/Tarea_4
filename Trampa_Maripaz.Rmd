@@ -14,7 +14,7 @@ library(ggdag)
 library(lme4)
 library(ggplot2)
 library(readr)
-Datos_tarea4 <- read_csv("Datos_tarea4.csv")
+Datos_tarea4 <- read.csv("Datos_tarea4.csv")
 ```
 
 ## **Investigación**
@@ -158,6 +158,15 @@ Inter.correccion
 ```
 
 Se puede notar que los intervalos de confianza son mas grandes para el modelo lineal mixto que para el modelo lineal simple.
+
+Se puede notar además, que en el plot de los residuales existe un patrón y no una dispersión homogénea. 
+A su vez se propone la utilización de un modelo generalizado de la familia poisson, ya que como se puede notar en los histogramas, la variable respuesta es en realidad un conteo. A continuación se presenta el modelo poisson:
+
+```{r}
+library(lme4)
+M.1_Poisson <- glmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), family = "poisson", data = Datos_tarea4)
+summary(M.1_Poisson)
+```
 
 &nbsp;
 -------
