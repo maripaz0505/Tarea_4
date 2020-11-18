@@ -248,3 +248,61 @@ Los resultados anteriores demuestran como en las zonas templadas, todos los indi
 
 
 #### **-Trampa 3**
+
+#### **-Corrección Trampa 3**
+
+Similar a lo que ocurrió en la trampa 1, aquí tenemos un caso tipico de pseudoreplicación, donde tenemos una inflación del tamaño de muestra  si utilizamos los pájaros como unidad de muestreo. La diferencia con la trampa 1 es que en este caso se dividieron los individuos por ubicación con respecto a la latitud, pero las unidades de muestreo siguen siendo los pájaros, no las poblaciones. No se deben usar los individuos como unidad de muestreo ya que entre ellos son dependientes. La unidad de muestreo que realmente es independiente entre sí, son las poblaciones. De esta forma se realiza o el promedio de los individuos por población o bien un modelo mixto utilizando como interacción las poblaciones. 
+
+
+
+```{r}
+M.1_Correccion3 <- lmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_tropical)
+S.1_Correccion3 <- summary(M.1)
+S.1_Correccion3
+```
+
+```{r}
+
+#Se crean vectores vacíos
+#Efecto estimado
+V.m1 <- NULL
+V.m2 <- NULL
+
+#Error estandar del efecto estimado
+V.s1 <- NULL
+V.s2 <- NULL
+
+V.m1 <- append(V.m1, S.1$coefficients[2, 1])
+V.s1 <- append(V.s1, S.1$coefficients[2, 2])
+
+V.m2 <- append(V.m2, S.2$coefficients[2, 1])
+V.s2 <- append(V.s2, S.2$coefficients[2, 2])
+
+Cuadro.Comparativo<- 
+  data.frame(
+  "Modelo" = c("Numero total de pajaros", "Modelo Mixto"), #Se realiza un cuadro para ver las diferencias entre los valores de promedios de residuos y errores estándar
+  "Efecto promedio" =c(V.m1, V.m2),
+  "Desviacion estandar" =c(V.s1, V.s2))
+Cuadro.Comparativo
+```
+
+
+Como se puede observar en el cuadro, el valor de beta, el promedio de los residuos es el mismo pero la desviación estándar varía entre los dos modelos. Siendo mucho menor la desviación estándar cuando realizo pseudoreplicación. Es decir estaría falsamente mas segura de mi resultado, cuando en realidad tiene mayor incertidumbre.
+
+Por último se pueden comparar los intervalos de confianza, para comprobar lo anterior para cada una de las variables estudiadas.
+```{r}
+Inter.trampa <- confint(M.1)
+Inter.correccion <- confint(M.1_Correccion)
+Inter.trampa
+Inter.correccion
+```
+
+Se puede notar que los intervalos de confianza son mas grandes para el modelo lineal mixto que para el modelo lineal simple.
+
+Se puede notar además, que en el plot de los residuales existe un patrón y no una dispersión homogénea. 
+A su vez se propone la utilización de un modelo generalizado de la familia poisson, ya que como se puede notar en los histogramas, la variable respuesta es en realidad un conteo. A continuación se presenta el modelo poisson:
+
+```{r}
+library(lme4)
+M.1_Poisson <- glmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), family = "poisson", data = Datos_tarea4)
+summary(M.1_Poisson)
