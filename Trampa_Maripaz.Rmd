@@ -75,7 +75,7 @@ hist(H5, main = "Indicador 5 Degradación del hábitat", col = "Brown")
 ```
 
 
-Se puede evidenciar, que todas las variables mostradas anteriormente, tienen un comportamiento con tendencia a una curva de Gauss, con alguna que otra excepción.  
+Se puede evidenciar, que todas las variables mostradas anteriormente, tienen un comportamiento con tendencia a una curva de Gauss. Sin embargo, es importante reconocer como la diversidad alélica no tiene este comportamiento. Esto se puede deber a que esta variable es un conteo de alelos diferentes.  
 
 Continuando con el análisis preliminar de las relaciones entre variables se realiza, se realizan los siguientes gráficos:
 
@@ -117,7 +117,7 @@ Es posible concluir que las variables H1, H2 y H4 tienen efecto sobre la diversi
 
 #### **-Trampa 2**
 
-En esta ocasión, se realizan dos modelos diferentes, a partir de la variable de efecto latitudinal (L). Esto se realiza ya que, la especie de estudio tiene un amplio rango de distribución, donde las características de los individuos en zonas templadas y tropicales varía, de esta forma aumentando la variabilidad entre los individuos muestreados y por lo tanto obteniendo una mayor desviación estándar en los futuros resultados.
+En esta ocasión, se realizan dos modelos diferentes, a partir de la variable de efecto latitudinal (L). Esto se realiza ya que, la especie de estudio tiene un amplio rango de distribución, donde las características de los individuos en zonas templadas y tropicales varía. Viviendo en hábitats tan diferentes como lo son aquellos templados y tropicales, los pájaros pueden presentar variaciones importantes entre ellos por el simple hecho de ser de una zona u otro. Es por esta razón que se realizan dos modelos, evitando así el aumento de la variabilidad entre los individuos muestreados y una desviación estándar alta en los futuros resultados.
 
 Para esto, la variable L, que esta centrada en cero es corregida a su estado normal de la siguiente forma: 
 ```{r}
@@ -152,16 +152,6 @@ boxplot(H5 ~ Datos_tarea4$Zona, ylab = "Indicador de Degradación del Hábitat 5
 
 Se puede evidenciar, como algunas variables como la diversidad alélica presentan diferencias entre las dos zonas, templada y tropical. 
 
-Como el objetivo es comparar entre los dos modelos  y entre sus variables, se plantea normalizar todas las variables con el siguiente comando
-```{r}
-Zona_templada_N <- scale(Zona_templada)
-Zona_templada_N <- data.frame(Zona_templada_N)
-
-Zona_tropical_N <- scale(Zona_tropical)
-Zona_tropical_N <- data.frame(Zona_tropical_N)
-
-```
-
 
 ### Se realizan los siguientes modelos:
 
@@ -169,21 +159,22 @@ Para los modelos se utiliza el paquete [lmerTest](https://cran.r-project.org/web
 
 ##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas templadas
 ```{r}
-library(lmerTest) #Se utiliza el paquete para comparar valores de p de las variables entre modelos
-M.Templado<- lmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_templada_N)
+M.Templado<- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_templada)
 summary(M.Templado)
+
 ```
 
 ##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas tropicales
 ```{r}
-M.Tropical <- lmer(D ~ L + H1 + H2 + H3 + H4+ H5 + (1|P), data = Zona_tropical_N)
+M.Tropical <- lm(D ~ L + H1 + H2 + H3 + H4+ H5, data = Zona_tropical)
 summary(M.Tropical)
 
 ```
 
 #### Interpretación de resultado
 
-Los resultados anteriores demuestran como en las zonas templadas, todos los indicadores de degradación del hábitat afectan negativamente la diversidad alélica de los pájaros, mientras que en las zonas tropicales los indicadores H3 y H5 afectan positivamente la variable respuesta D. Por otro lado, podemos observar que los indicadores H1 (se= 0.14, t-value= -2.14, p-value= 0.0451) y H4 (se= 0.15, t-value= -4.15, p-value= 0.0005) afectan significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* en **zonas templadas**. Mientras que en **zonas tropicales** únicamente el indicador H4 tiene un efecto significativo sobre la diversidad alélica (se= 0.17, t-value= -3.81, p-value= 0.000764).  
+Los resultados anteriores demuestran como en las zonas templadas,  los indicadores de degradación del hábitat  H1 (se= -3.41, t-value= -7.57, p-value= 6.11e^-13^), H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^), H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) y H4 (se= -6.90, t-value= -14.70, p-value= 2e^-16^) afectan negativamente la diversidad alélica de los pájaros mas que en las zonas tropicales. Mientras que en las zonas tropicales H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta positivamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* mas que en las zonas templadas. 
+
 
 
 &nbsp;
