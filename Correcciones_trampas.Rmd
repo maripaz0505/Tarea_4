@@ -253,7 +253,9 @@ Los resultados anteriores demuestran como en las zonas templadas, todos los indi
 
 Similar a lo que ocurrió en la trampa 1, aquí tenemos un caso tipico de pseudoreplicación, donde tenemos una inflación del tamaño de muestra  si utilizamos los pájaros como unidad de muestreo. La diferencia con la trampa 1 es que en este caso se dividieron los individuos por ubicación con respecto a la latitud, pero las unidades de muestreo siguen siendo los pájaros, no las poblaciones. No se deben usar los individuos como unidad de muestreo ya que entre ellos son dependientes. La unidad de muestreo que realmente es independiente entre sí, son las poblaciones. De esta forma se realiza o el promedio de los individuos por población o bien un modelo mixto utilizando como interacción las poblaciones. 
 
-Si no se realiza la corrección por poblaciones el modelo sería el siguiente:
+Otra situación que podemos observar es que en la trampa se siguen separando los análisis según zona tropical o zona templada, lo cual genera más complejidad en los análisis y se dividen los modelos en dos partes cuando se debería hacer un solo análisis. 
+
+Primero vamos a hacer una corrección del N inflado, separando por zonas. Si no se realiza la corrección por poblaciones el modelo sería el siguiente:
 
 ```{r}
 M.1_sincorregir <- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_tropical)
@@ -332,6 +334,19 @@ Cuadro.Comparativo<-
 Cuadro.Comparativo
 ```
 
-Como se puede observar en el cuadro, el promedio de los residuos varía, siendo este menor cuando se hace el modelo utilizando las poblaciones como unidades de muestreo. La desviación estándar también varía entre los dos modelos, resultando menor al hacer la corrección.
+Como se puede observar en el cuadro, el promedio de los residuos es el mismo cuando se hace el modelo utilizando las poblaciones como unidades de muestreo. La desviación estándar también varía entre los dos modelos, resultando mucho mayor al hacer la corrección.
 
-En comparación con los resultados obtenidos cuando hubo pseudoreplicación, para la zona templada es posible concluir que los indicadores H1, H2, H3 y H4 afectan significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* en **zonas templadas**. Con respecto a las zonas tropicales es posible concluir que los indicadores H1 afectan significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. Además, interesante destacar que en este modelo la población afecta también la diversidad alélica.
+En comparación con los resultados obtenidos cuando hubo pseudoreplicación, para la zona templada es posible concluir que los indicadores ninguna de las variables afectó significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* en **zonas templadas**. Con respecto a las zonas tropicales igualmente ninguna de las variables afectó significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. 
+
+Ahora, haciendo un solo modelo sin dividir por poblaciones:
+
+```{r}
+M.3_corregido <- lm(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Datos_tarea4)
+S.3_corregido <- summary(M.3_corregido)
+S.3_corregido
+
+```
+Ninguna de las variables analizadas afecta significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. Si hubiésemos realizado las trampas realizadas anteriormente se hubiesen reportado variables que afectaban la diversidad alélica de los pájaros, cuando en realidad no era cierto, cometiendo un grave error tipo II al asegurar variables que afectan la diversidad alélica de una población. 
+
+
+Con el modelo anterior es posible observar que las variables H1, H2 y H4 tienen efecto significativo sobre 
