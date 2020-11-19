@@ -2,7 +2,10 @@
 title: "Tarea 4 - Curso Herramientas Practicas para Investigación Reproducible"
 author: "Maripaz Castro-Murillo, Galit Akerman-Sánchez & Andrea Romero"
 date: "6/11/2020"
-output: html_document
+output: output:
+  prettydoc::html_pretty:
+    theme: lumen
+    highlight: github
 ---
 
 ```{r setup, include=FALSE}
