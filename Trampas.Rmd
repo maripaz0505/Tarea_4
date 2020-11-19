@@ -373,8 +373,10 @@ S.3_corregido <- summary(M.3_corregido)
 S.3_corregido
 
 ```
+
 #### Interpretación:
-Ninguna de las variables analizadas afecta significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. Si hubiésemos realizado las trampas realizadas anteriormente se hubiesen reportado variables que afectaban la diversidad alélica de los pájaros, cuando en realidad no era cierto, cometiendo un grave error tipo II al asegurar variables que afectan la diversidad alélica de una población. 
+De las variables analizadas, las variables H1, H2 y H4 afectan significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. Si hubiésemos realizado las trampas realizadas anteriormente se hubiesen reportado variables que afectaban la diversidad alélica de los pájaros, cuando en realidad no era cierto, cometiendo un grave error al asegurar variables que afectan la diversidad alélica de una población. 
+Se sugiere utilzar este modelo, ya que nos permite estudiar el efecto de todas las variables sobre la diversidad genética, en todas las poblaciones estudiadas. Además, no es necesario dividir por zonas de latitud.
 
 
 
