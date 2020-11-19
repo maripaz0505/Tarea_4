@@ -21,35 +21,6 @@ library(readr)
 Datos_tarea4 <- read_csv("Datos_tarea4.csv")
 ```
 
-## **Investigación**
-
-#### La presente investigación tiene como objetivo estudiar cómo la diversidad alélica (D) del complejo mayor de histocompatibilidad clase I (CMH-I) de la especie *Pajaritus pajaritus* se ve afectada por la degradación del hábitat (H). Esta especie presenta una amplia distribución desde zonas templadas hasta tropicales, donde se ha visto que en zonas templadas la degradación del hábitat es mayor que en zonas tropicales. A su vez, se ha evidenciado como la diversidad alélica del CMH-I es mayor en zonas tropicales, donde han evolucionado junto con una mayor diversidad de parásitos. 
-
-A continuación se muestra un diagrama causal como hipótesis donde L representa el efecto latitudinal. 
-
-```{r, echo=FALSE, dpi=50}
-require(ggdag)
-dagified <- dagify(D ~ H,
-                   D ~ L,
-                   H ~ L,
-                   exposure = "H",
-                   outcome = "D")
-
-ggdag(dagified, layout = "circle") + theme_dag()
-```
-
-## **El estudio realizado**
-
-##### En un periodo de 10 años (A), el equipo trabajó con 60 poblaciones de esta especie, donde en cada una de estas poblaciones 10 individuos fueron muestreados.  Se cuantificaron 5 variables (H1-H5) como indicadores de la degradación del hábitat. A su vez, la variable L, representando el efecto latitudinal fue centrada en cero, al igual que H1 y H5.
-
-## **Análisis de los datos**
-
-Para cumplir con el objetivo de la investigación se realiza primero un análisis exploratorio de los datos:
-
-```{r, include=TRUE, echo=FALSE}
-require(ggplot2)
-require(lme4)
-```
 
 ```{r, include=TRUE, echo=TRUE}
 D <- Datos_tarea4$D
@@ -67,131 +38,15 @@ H5 <- Datos_tarea4$H5
 ```
 
 
-```{r}
-par(mfrow=c(3,2))
-hist(D, main = "Diversidad Alélica", col = "Yellow")
-hist(H1, main = "Indicador 1 Degradación del hábitat", col = "Orange")
-hist(H2, main = "Indicador 2 Degradación del hábitat", col = "Blue")
-hist(H3, main = "Indicador 3 Degradación del hábitat", col = "Green")
-hist(H4, main = "Indicador 4 Degradación del hábitat", col = "Red")
-hist(H5, main = "Indicador 5 Degradación del hábitat", col = "Brown")
-
-```
-
-
-Se puede evidenciar, que todas las variables mostradas anteriormente, tienen un comportamiento con tendencia a una curva de Gauss. Sin embargo, es importante reconocer como la diversidad alélica no tiene este comportamiento. Esto se puede deber a que esta variable es un conteo de alelos diferentes.  
-
-Continuando con el análisis preliminar de las relaciones entre variables se realiza, se realizan los siguientes gráficos:
-
-```{r}
-par(mfrow=c(3,2))
-plot(H1, D, main = "Relación de la diversidad alélica con el indicador 1", type = "b", col= "Orange")
-plot(H2, D, main = "Relación de la diversidad alélica con el indicador 2", type = "b", col= "Blue")
-plot(H3, D, main = "Relación de la diversidad alélica con el indicador 3", type = "b", col= "Green")
-plot(H4, D, main = "Relación de la diversidad alélica con el indicador 4", type = "b", col= "Red")
-plot(H5, D, main = "Relación de la diversidad alélica con el indicador 5", type = "b", col= "Brown")
-```
-
-Se puede observar de los diferentes gráficos una leve tendencia donde cuando se aumenta el valor del indicador de degradación del hábitat disminuye el valor de D, que hace referencia a la diversidad alélica. Es decir, una leve tendencia a una relación inversamente proporcional entre ambas variables.  
-
-## **Análisis del modelo**
-
-#### **-Trampa 1**
-```{r, include=TRUE, echo=TRUE}  
-M.1 <- lm(D ~ L + H1 + H2 + H3 + H4+ H5, data = Datos_tarea4)
-S.1 <- summary(M.1)
-S.1
-```
-
-```{r, include=TRUE, echo=TRUE, eval=TRUE}
-plot(M.1, 1)
-
-```
-
-#### Interpretación de resultados
-
-Nuestros resultados indican varias cosas, que nuestro modelo explica  un 49% de la variación en la diversidad genética de los pájaros analizados,además podemos decir que en general hay variables incluidas en nuestro modelo que tienen efecto sobre la diversidad genética de los pajaritos.  Las variables L, H3 y H5 presentaron valores de t mayores, lo cual indica que cuanto más alto es el valor t mayor la divergencia entre los coeficientes del modelo y el coeficiente igual a cero.
-
-Es posible concluir que las variables H1, H2 y H4 tienen efecto sobre la diversidad genética de los pájaros en las diferentes poblaciones.
-
-
-&nbsp;
--------
-
-
-#### **-Trampa 2**
-
-En esta ocasión, se realizan dos modelos diferentes, a partir de la variable de efecto latitudinal (L). Esto se realiza ya que, la especie de estudio tiene un amplio rango de distribución, donde las características de los individuos en zonas templadas y tropicales varía. Viviendo en hábitats tan diferentes como lo son aquellos templados y tropicales, los pájaros pueden presentar variaciones importantes entre ellos por el simple hecho de ser de una zona u otro. Es por esta razón que se realizan dos modelos, evitando así el aumento de la variabilidad entre los individuos muestreados y una desviación estándar alta en los futuros resultados.
-
-Para esto, la variable L, que esta centrada en cero es corregida a su estado normal de la siguiente forma: 
-```{r}
-Datos_tarea4$L.o <- Datos_tarea4$L*10 + 20 #Para obtener los datos originales en grados
-summary(Datos_tarea4$L.o)
-head(Datos_tarea4) #La base con la variable nueva L.o integrada
-```
-
-Podemos observar que el punto máximo es de 47.40 y el mínimo de -0.80. Es importante aclarar que revertir esta variable a su forma normal y no centrada en cero, no afecta en nada los resultados del experimento. Este acto fue realizado para poder separar aquellos individuos que se encuentran en zonas templadas y aquellos en zonas tropicales. 
-
-Ahora bien, se tomara como referencia el trópico de cáncer que se encuentra a 23.5 grados. Se puede confirmar ingresando al siguiente enlace [Coordenadas  Trópico de Cáncer](https://es.wikipedia.org/wiki/Tr%C3%B3pico_de_C%C3%A1ncer). Donde a valores en la variable L.o más altos que 23.5, se tomaran como zona templada, y más bajo que 23.5 como zona tropical. 
-
-```{r}
-Zona_templada<- subset(x = Datos_tarea4, subset = L.o > 23.5)
-Zona_tropical<- subset(x = Datos_tarea4, subset = L.o < 23.5)
-```
-
-A continuación, se realizan gráficos con los grupos de zona templada y zona tropical. Primero se genera la variable categórica de Zona.  
-```{r}
-Datos_tarea4$Zona <- ifelse(Datos_tarea4$L.o > 23.5, 1, 0) #Donde 1 son zonas templadas y 0 son zonas tropicales
-Datos_tarea4$Zona <- as.character(Datos_tarea4$Zona)
-Datos_tarea4$Zona[Datos_tarea4$Zona == '1'] <- 'Templada' #Cambio de nombre: De 1 a Templada
-Datos_tarea4$Zona[Datos_tarea4$Zona == '0'] <- 'Tropical' #Cambio de nombre: De 0 a Tropical
-par(mfrow=c(3,2)) 
-boxplot(D ~ Datos_tarea4$Zona, ylab = "Diversidad Alélica" , xlab = "Zona", col = "Yellow")
-boxplot(H1 ~ Datos_tarea4$Zona, ylab = "Indicador de Degradación del Hábitat 1" , xlab = "Zona", col = "Orange")
-boxplot(H2 ~ Datos_tarea4$Zona, ylab = "Indicador de Degradación del Hábitat 2" , xlab = "Zona", col = "Blue")
-boxplot(H3 ~ Datos_tarea4$Zona, ylab = "Indicador de Degradación del Hábitat 3" , xlab = "Zona", col = "Green")
-boxplot(H4 ~ Datos_tarea4$Zona, ylab = "Indicador de Degradación del Hábitat 4" , xlab = "Zona", col = "Red")
-boxplot(H5 ~ Datos_tarea4$Zona, ylab = "Indicador de Degradación del Hábitat 5" , xlab = "Zona", col = "Brown")
-```
-
-Se puede evidenciar, como algunas variables como la diversidad alélica presentan diferencias entre las dos zonas, templada y tropical. 
-
-
-### Se realizan los siguientes modelos:
-
-Para los modelos se utiliza el paquete [lmerTest](https://cran.r-project.org/web/packages/lmerTest/lmerTest.pdf). A su vez, la interpretación es apoyada por [este artículo](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0084162#s3) donde se utiliza e interpreta un modelo lineal mixto.   
-
-##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas templadas
-```{r}
-M.Templado<- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_templada)
-summary(M.Templado)
-
-```
-
-##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas tropicales
-```{r}
-M.Tropical <- lm(D ~ L + H1 + H2 + H3 + H4+ H5, data = Zona_tropical)
-summary(M.Tropical)
-
-```
-
-#### Interpretación de resultado
-
-Los resultados anteriores demuestran como  los indicadores de degradación del hábitat H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^) y H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) tienen significativamente un mayor efecto (de manera negativa) sobre la diversidad alelica en las poblaciones templadas que en las tropicales. Por otro lado, el indicador H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta significativamente (de manera positiva) mas la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* de zonas tropicales que en templadas.
-
-
-
-&nbsp;
--------
-
-
 #### **-Trampa 3**
 
 El objetivo de este análisis es comparar el efecto individual de cada variable indicadora de degradación de hábitat sobre la diversidad alélica del CMH-1 de *P. pajaritus* de acuerdo con su distribución (i.e. zona templada y zona tropical).
 
 Inicialmente, se establece la distribución de la población en dos modelos: (1) zona templada mayor a 23.5 grados y (2) zona tropical menor a 23.5 grados, tomando como referencia el trópico de cáncer que se encuentra a 23.5 grados.
 
-```{r}
+Voy a eliminar la codificación de zonas latitudinalespara no hacer tanto spam.
+
+```{r, include=FALSE}
 Datos_tarea4$L.o <- Datos_tarea4$L*10 + 20 #datos originales en grados
 summary(Datos_tarea4$L.o)
 
@@ -199,185 +54,19 @@ Zona_templada<- subset(x = Datos_tarea4, subset = L.o > 23.5)
 Zona_tropical<- subset(x = Datos_tarea4, subset = L.o < 23.5)
 ```
 
-Luego, se evalúa el efecto de cada indicador de degradación de hábitat sobre la diversidad alélica del CMH-1 tanto en las zonas tropicales como en las zonas templadas previamente establecidas.
+Considero dos cosas con respecto a este análisis: 1) está inflado el N, pues se toman los individuos como unidad de muestreo y no las poblaciones. 2) No es necesario separar por zonas, se puede hacer un solo modelo que evalúe el efecto de las variables sobre la diversidad genética de los pájaros en sus diferentes poblaciones.
 
-##### **Efecto de la degradacion del hábitat en la diversidad alélica para poblaciones en zonas tropicales**
-
-Indicador de degradación de hábitat 1 (H1):
-```{r}
-M.1 <- lm(D ~ L + H1, data = Zona_tropical)
-S.1 <- summary(M.1)
-S.1
-```
-
-Indicador de degradación de hábitat 2 (H2):
-```{r}
-M.2 <- lm(D ~ L + H2, data = Zona_tropical)
-S.2 <- summary(M.2)
-S.2
-```
-
-Indicador de degradación de hábitat 3 (H3):
-```{r}
-M.3 <- lm(D ~ L + H3, data = Zona_tropical)
-S.3 <- summary(M.3)
-S.3
-```
-
-Indicador de degradación de hábitat 4 (H4):
-```{r}
-M.4 <- lm(D ~ L + H4, data = Zona_tropical)
-S.4 <- summary(M.4)
-S.4
-```
-
-Indicador de degradación de hábitat 5 (H5):
-```{r}
-M.5 <- lm(D ~ L + H5, data = Zona_tropical)
-S.5 <- summary(M.5)
-S.5
-```
-
-##### **Efecto de la degradacion del hábitat en la diversidad alélica para poblaciones en zonas templadas**
-
-Indicador de degradación de hábitat 1 (H1):
-```{r}
-M.6 <- lm(D ~ L + H1, data = Zona_templada)
-S.6 <- summary(M.6)
-S.6
-```
-
-Indicador de degradación de hábitat 2 (H2):
-```{r}
-M.7 <- lm(D ~ L + H2, data = Zona_templada)
-S.7 <- summary(M.7)
-S.7
-```
-
-Indicador de degradación de hábitat 3 (H3):
-```{r}
-M.8 <- lm(D ~ L + H3, data = Zona_templada)
-S.8 <- summary(M.8)
-S.8
-```
-
-Indicador de degradación de hábitat 4 (H4):
-```{r}
-M.9 <- lm(D ~ L + H4, data = Zona_templada)
-S.9 <- summary(M.9)
-S.9
-```
-
-Indicador de degradación de hábitat 5 (H5):
-```{r}
-M.10 <- lm(D ~ L + H5, data = Zona_templada)
-S.10 <- summary(M.10)
-S.10
-```
-
-#### Interpretación de resultado
-De acuerdo con los resultados, las varibles H1, H4 y H5 afectan **significativamente** la diversidad alélica del CMH1- de *P. pajaritus* en las zonas tropicales. No obstante, las variables H1-H4 tienen un efecto **significativo** sobre la diversidad alélica de *P. pajaritus* en zonas templadas. Por lo tanto, se sugiere que las variables **H2** y **H3** tienen un efecto más importante sobre la diversidad alélica en zonas templadas que en zonas tropicales; en cambio, la variable **H5** es un indicador de mayor importancia sobre la diversidad alélica del CMH-1 en las zonas tropicales que en zonas templadas.
-
-Similar a lo que ocurrió en la trampa 1, aquí tenemos un caso tipico de pseudoreplicación, donde tenemos una inflación del tamaño de muestra  si utilizamos los pájaros como unidad de muestreo. La diferencia con la trampa 1 es que en este caso se dividieron los individuos por ubicación con respecto a la latitud, pero las unidades de muestreo siguen siendo los pájaros, no las poblaciones. No se deben usar los individuos como unidad de muestreo ya que entre ellos son dependientes. La unidad de muestreo que realmente es independiente entre sí, son las poblaciones. De esta forma se realiza o el promedio de los individuos por población o bien un modelo mixto utilizando como interacción las poblaciones. 
-
-Otra situación que podemos observar es que en la trampa se siguen separando los análisis según zona tropical o zona templada, lo cual genera más complejidad en los análisis y se dividen los modelos en dos partes cuando se debería hacer un solo análisis. 
-
-Primero vamos a hacer una corrección del N inflado, separando por zonas. Si no se realiza la corrección por poblaciones el modelo sería el siguiente:
+Voy a hacer un modelo de regresión lineal que incluya las poblaciones como unidades de muestreo:
 
 ```{r}
-M.1_sincorregir <- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_tropical)
-S.1_sincorregir <- summary(M.1_sincorregir)
-S.1_sincorregir
-
-
-```{r}
-M.1_Correccion3 <- lmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_tropical)
-S.1_Correccion3 <- summary(M.1)
-S.1_Correccion3
-```
-
-```{r}
-M.2_sincorregir <- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_templada)
-S.2_sincorregir <- summary(M.2_sincorregir)
-S.2_sincorregir
-
-
-```{r}
-M.2_Correccion3 <- lmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_templada)
-S.2_Correccion3 <- summary(M.1)
-S.2_Correccion3
-```
-
-
-Para comparar los resultados de zona tropical con y sin corrección:
-
-```{r}
-
-#Se crean vectores vacíos
-#Efecto estimado
-V.m1 <- NULL
-V.m2 <- NULL
-
-#Error estandar del efecto estimado
-V.s1 <- NULL
-V.s2 <- NULL
-
-V.m1 <- append(V.m1, S.1_sincorregir$coefficients[2, 1])
-V.s1 <- append(V.s1, S.1_sincorregir$coefficients[2, 2])
-
-V.m2 <- append(V.m2, S.1_Correccion3$coefficients[2, 1])
-V.s2 <- append(V.s2, S.1_Correccion3$coefficients[2, 2])
-
-Cuadro.Comparativo<- 
-  data.frame(
-    "Modelo" = c("Numero total de pajaros", "Modelo Mixto"), #Se realiza un cuadro para ver las diferencias entre los valores de promedios de residuos y errores estándar
-    "Efecto promedio" =c(V.m1, V.m2),
-    "Desviacion estandar" =c(V.s1, V.s2))
-Cuadro.Comparativo
-```
-Para comparar los resultados de zona templada con y sin corrección:
-
-```{r}
-#Se crean vectores vacíos
-#Efecto estimado
-V.m1 <- NULL
-V.m2 <- NULL
-
-#Error estandar del efecto estimado
-V.s1 <- NULL
-V.s2 <- NULL
-
-V.m1 <- append(V.m1, S.2_sincorregir$coefficients[2, 1])
-V.s1 <- append(V.s1, S.2_sincorregir$coefficients[2, 2])
-
-V.m2 <- append(V.m2, S.2_Correccion3$coefficients[2, 1])
-V.s2 <- append(V.s2, S.2_Correccion3$coefficients[2, 2])
-
-Cuadro.Comparativo<- 
-  data.frame(
-    "Modelo" = c("Numero total de pajaros", "Modelo Mixto"), #Se realiza un cuadro para ver las diferencias entre los valores de promedios de residuos y errores estándar
-    "Efecto promedio" =c(V.m1, V.m2),
-    "Desviacion estandar" =c(V.s1, V.s2))
-Cuadro.Comparativo
-```
-
-Como se puede observar en el cuadro, el promedio de los residuos es el mismo cuando se hace el modelo utilizando las poblaciones como unidades de muestreo. La desviación estándar también varía entre los dos modelos, resultando mucho mayor al hacer la corrección.
-
-En comparación con los resultados obtenidos cuando hubo pseudoreplicación, para la zona templada es posible concluir que los indicadores ninguna de las variables afectó significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* en **zonas templadas**. Con respecto a las zonas tropicales igualmente ninguna de las variables afectó significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. 
-
-Ahora, haciendo un solo modelo sin dividir por poblaciones:
-
-```{r}
-M.3_corregido <- lm(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Datos_tarea4)
+lm(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Datos_tarea4)
 S.3_corregido <- summary(M.3_corregido)
 S.3_corregido
-
 ```
 
-#### Interpretación:
-De las variables analizadas, las variables H1, H2 y H4 afectan significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. Si hubiésemos realizado las trampas realizadas anteriormente se hubiesen reportado variables que afectaban la diversidad alélica de los pájaros, cuando en realidad no era cierto, cometiendo un grave error al asegurar variables que afectan la diversidad alélica de una población. 
-Se sugiere utilzar este modelo, ya que nos permite estudiar el efecto de todas las variables sobre la diversidad genética, en todas las poblaciones estudiadas. Además, no es necesario dividir por zonas de latitud.
 
+#### Interpretación de resultado
+De acuerdo con los resultados, las varibles H1, H2 y H4 tienen efecto  **significativo** sobre la diversidad alélica del CMH1- de *P. pajaritus*. Es interesante comparar estos resultados con los análisis previamente analizados por la compañera, donde ella reportó que para zonas tropicales las variables que tenían efectos significativos eran H1, H4 y H5, mientras que para zonas templadas H1-H4 tenían efectos significativos sobre la variable respuesta. 
 
-
+Si nos quedamos con el análisis separando las zonas según latitud algunas variables van a resultar significativas, otras no, y esto no contempla las poblaciones como unidades de muestreo, sino los individuos. Además, estamos dividiendo el análisis por variable, lo cual nos podría llevar a cometer error tipo II. 
 
