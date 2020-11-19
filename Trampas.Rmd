@@ -277,3 +277,105 @@ S.10
 
 #### Interpretación de resultado
 De acuerdo con los resultados, las varibles H1, H4 y H5 afectan **significativamente** la diversidad alélica del CMH1- de *P. pajaritus* en las zonas tropicales. No obstante, las variables H1-H4 tienen un efecto **significativo** sobre la diversidad alélica de *P. pajaritus* en zonas templadas. Por lo tanto, se sugiere que las variables **H2** y **H3** tienen un efecto más importante sobre la diversidad alélica en zonas templadas que en zonas tropicales; en cambio, la variable **H5** es un indicador de mayor importancia sobre la diversidad alélica del CMH-1 en las zonas tropicales que en zonas templadas.
+
+Similar a lo que ocurrió en la trampa 1, aquí tenemos un caso tipico de pseudoreplicación, donde tenemos una inflación del tamaño de muestra  si utilizamos los pájaros como unidad de muestreo. La diferencia con la trampa 1 es que en este caso se dividieron los individuos por ubicación con respecto a la latitud, pero las unidades de muestreo siguen siendo los pájaros, no las poblaciones. No se deben usar los individuos como unidad de muestreo ya que entre ellos son dependientes. La unidad de muestreo que realmente es independiente entre sí, son las poblaciones. De esta forma se realiza o el promedio de los individuos por población o bien un modelo mixto utilizando como interacción las poblaciones. 
+
+Otra situación que podemos observar es que en la trampa se siguen separando los análisis según zona tropical o zona templada, lo cual genera más complejidad en los análisis y se dividen los modelos en dos partes cuando se debería hacer un solo análisis. 
+
+Primero vamos a hacer una corrección del N inflado, separando por zonas. Si no se realiza la corrección por poblaciones el modelo sería el siguiente:
+
+```{r}
+M.1_sincorregir <- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_tropical)
+S.1_sincorregir <- summary(M.1_sincorregir)
+S.1_sincorregir
+
+
+```{r}
+M.1_Correccion3 <- lmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_tropical)
+S.1_Correccion3 <- summary(M.1)
+S.1_Correccion3
+```
+
+```{r}
+M.2_sincorregir <- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_templada)
+S.2_sincorregir <- summary(M.2_sincorregir)
+S.2_sincorregir
+
+
+```{r}
+M.2_Correccion3 <- lmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_templada)
+S.2_Correccion3 <- summary(M.1)
+S.2_Correccion3
+```
+
+
+Para comparar los resultados de zona tropical con y sin corrección:
+
+```{r}
+
+#Se crean vectores vacíos
+#Efecto estimado
+V.m1 <- NULL
+V.m2 <- NULL
+
+#Error estandar del efecto estimado
+V.s1 <- NULL
+V.s2 <- NULL
+
+V.m1 <- append(V.m1, S.1_sincorregir$coefficients[2, 1])
+V.s1 <- append(V.s1, S.1_sincorregir$coefficients[2, 2])
+
+V.m2 <- append(V.m2, S.1_Correccion3$coefficients[2, 1])
+V.s2 <- append(V.s2, S.1_Correccion3$coefficients[2, 2])
+
+Cuadro.Comparativo<- 
+  data.frame(
+    "Modelo" = c("Numero total de pajaros", "Modelo Mixto"), #Se realiza un cuadro para ver las diferencias entre los valores de promedios de residuos y errores estándar
+    "Efecto promedio" =c(V.m1, V.m2),
+    "Desviacion estandar" =c(V.s1, V.s2))
+Cuadro.Comparativo
+```
+Para comparar los resultados de zona templada con y sin corrección:
+
+```{r}
+#Se crean vectores vacíos
+#Efecto estimado
+V.m1 <- NULL
+V.m2 <- NULL
+
+#Error estandar del efecto estimado
+V.s1 <- NULL
+V.s2 <- NULL
+
+V.m1 <- append(V.m1, S.2_sincorregir$coefficients[2, 1])
+V.s1 <- append(V.s1, S.2_sincorregir$coefficients[2, 2])
+
+V.m2 <- append(V.m2, S.2_Correccion3$coefficients[2, 1])
+V.s2 <- append(V.s2, S.2_Correccion3$coefficients[2, 2])
+
+Cuadro.Comparativo<- 
+  data.frame(
+    "Modelo" = c("Numero total de pajaros", "Modelo Mixto"), #Se realiza un cuadro para ver las diferencias entre los valores de promedios de residuos y errores estándar
+    "Efecto promedio" =c(V.m1, V.m2),
+    "Desviacion estandar" =c(V.s1, V.s2))
+Cuadro.Comparativo
+```
+
+Como se puede observar en el cuadro, el promedio de los residuos es el mismo cuando se hace el modelo utilizando las poblaciones como unidades de muestreo. La desviación estándar también varía entre los dos modelos, resultando mucho mayor al hacer la corrección.
+
+En comparación con los resultados obtenidos cuando hubo pseudoreplicación, para la zona templada es posible concluir que los indicadores ninguna de las variables afectó significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* en **zonas templadas**. Con respecto a las zonas tropicales igualmente ninguna de las variables afectó significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. 
+
+Ahora, haciendo un solo modelo sin dividir por poblaciones:
+
+```{r}
+M.3_corregido <- lm(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Datos_tarea4)
+S.3_corregido <- summary(M.3_corregido)
+S.3_corregido
+
+```
+#### Interpretación:
+Ninguna de las variables analizadas afecta significativamente la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus*. Si hubiésemos realizado las trampas realizadas anteriormente se hubiesen reportado variables que afectaban la diversidad alélica de los pájaros, cuando en realidad no era cierto, cometiendo un grave error tipo II al asegurar variables que afectan la diversidad alélica de una población. 
+
+
+
+
