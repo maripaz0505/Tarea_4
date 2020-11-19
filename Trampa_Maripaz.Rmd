@@ -19,7 +19,7 @@ Datos_tarea4 <- read_csv("Datos_tarea4.csv")
 
 ## **Investigación**
 
-#### La presente investigación tiene como objetivo estudiar cómo la diversidad alélica (D) del complejo mayor de histocompatibilidad clase I (CMH-I) de la especie *Pajaritus pajaritus* se ve afectada por la degradación del hábitat (H). Esta especie presenta una amplia distribución desde zonas templadas hasta tropicales, donde se ha visto que en zonas templadas la degradación del hábitat es mayor que en zonas tropicales. A su vez, se ha evidenciado como la diversidad alélica del CMH-I es mayor en zonas tropicales, donde han evolucionado junto con una mayor diversidad de parásitos. 
+La presente investigación tiene como objetivo estudiar cómo la diversidad alélica (D) del complejo mayor de histocompatibilidad clase I (CMH-I) de la especie *Pajaritus pajaritus* se ve afectada por la degradación del hábitat (H). Esta especie presenta una amplia distribución desde zonas templadas hasta tropicales, donde se ha visto que en zonas templadas la degradación del hábitat es mayor que en zonas tropicales. A su vez, se ha evidenciado como la diversidad alélica del CMH-I es mayor en zonas tropicales, donde han evolucionado junto con una mayor diversidad de parásitos. 
 
 A continuación se muestra un diagrama causal como hipótesis donde L representa el efecto latitudinal. 
 
@@ -34,11 +34,11 @@ dagified <- dagify(D ~ H,
 ggdag(dagified, layout = "circle") + theme_dag()
 ```
 
-## **El estudio realizado**
+#### **El estudio realizado**
 
-##### En un periodo de 10 años (A), el equipo trabajó con 60 poblaciones de esta especie, donde en cada una de estas poblaciones 10 individuos fueron muestreados.  Se cuantificaron 5 variables (H1-H5) como indicadores de la degradación del hábitat. A su vez, la variable L, representando el efecto latitudinal fue centrada en cero, al igual que H1 y H5.
+En un periodo de 10 años (A), el equipo trabajó con 60 poblaciones de esta especie, donde en cada una de estas poblaciones 10 individuos fueron muestreados.  Se cuantificaron 5 variables (H1-H5) como indicadores de la degradación del hábitat. A su vez, la variable L, representando el efecto latitudinal fue centrada en cero, al igual que H1 y H5.
 
-## **Análisis de los datos**
+##### **Análisis de los datos**
 
 Para cumplir con el objetivo de la investigación se realiza primero un análisis exploratorio de los datos:
 
@@ -173,9 +173,32 @@ summary(M.Tropical)
 
 #### Interpretación de resultado
 
-Los resultados anteriores demuestran como  los indicadores de degradación del hábitat H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^) y H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) tienen significativamente un mayor efecto (de manera negativa) sobre la diversidad alelica en las poblaciones templadas que en las tropicales. Por otro lado, el indicador H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta significativamente (de manera positiva) mas la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* de zonas tropicales que en templadas.
+Los resultados anteriores demuestran como  los indicadores de degradación del hábitat H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^) y H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) tienen significativamente un mayor efecto (de manera negativa) sobre la diversidad alélica en las poblaciones templadas que en las tropicales. Por otro lado, el indicador H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta significativamente (de manera positiva) más la diversidad alélica del CMH-I de *Pajaritus pajaritus* de zonas tropicales que en templadas.
 
+#### Corrección trampa 2
 
+En este análisis, se identifican dos errores muy evidentes: (1) inflación del tamaño de muestra (N), ya que se utilizan el número total de pájaros como unidad de muestreo, es decir, los 600 individuos, cuando en realidad debería ser el número de poblaciones porque estas son las unidades de muestreo independientes entre sí; y (2) comparaciones indirectas, ya que en la interpretación se hace una diferencia en el efecto de las variables indicadoras de degradación de hábitat sobre la diversidad alélica del CMH-I **en dos zonas, templada y tropical**, cuando en realidad lo que se hizo fue investigar cada zona por aparte. 
+
+Para corregir el primer error, se pasa de 600 individuos a 60 poblaciones en cada zona con el argumento `(1|P)`:
+
+Zona templada:
+
+```{r}
+M.Templado.corregido<- lm(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_templada)
+summary(M.Templado.corregido)
+```
+
+Zona tropical:
+```{r}
+M.Tropical.corregido<- lm(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Zona_tropical)
+summary(M.Tropical.corregido)
+```
+
+Para el segundo error, puede corregirse únicamente la interpretación donde se deje claro que fueron análisis por aparte y no comparaciones entre las dos zonas; o también puede eliminarse la separación de las dos zonas y ver la interacción de la latitud sobre las variables indicadoras de degradación de hábitat sobre la diversidad alélica del CMH-I.
+
+**Corrigiendo la interpretación:**
+
+Los resultados del análisis 2 demuestran como los indicadores de degradación del hábitat H1-H4 tienen significativamente un efecto (de manera negativa) sobre la diversidad alélica en las poblaciones templadas. Por otro lado, los indicadores H1, H4 y H5 afectan significativamente (de manera positiva) la diversidad alélica del CMH-I de *Pajaritus pajaritus* en zonas tropicales. 
 
 &nbsp;
 -------
