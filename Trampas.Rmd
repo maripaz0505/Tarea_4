@@ -1,7 +1,7 @@
 ---
-title: "Tarea 4 - Curso Herramientas Practicas para Investigación Reproducible"
+title: "Tarea 4 - Curso Herramientas Prácticas para Investigación Reproducible"
 author: "Maripaz Castro-Murillo, Galit Akerman-Sánchez & Andrea Romero"
-date: "6/11/2020"
+date: "19/11/2020"
 output:
   prettydoc::html_pretty:
     theme: lumen
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, include=FALSE, echo=FALSE}
-libra
+library(rmdformats)
 library(ggdag)
 library(lme4)
 library(ggplot2)
@@ -36,6 +36,7 @@ H4 <- Datos_tarea4$H4
 H5 <- Datos_tarea4$H5
 
 ```
+
 
 
 #### **-Trampa 3**
