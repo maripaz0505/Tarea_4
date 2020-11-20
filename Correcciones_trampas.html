@@ -249,6 +249,61 @@ code span.ot { color: #007020; }
 ## H4 -0.074 -0.340 -0.049 -0.010 -0.095       
 ## H5  0.127 -0.477  0.042  0.073 -0.075  0.028</code></pre>
 </div>
+<div id="trampa-3" class="section level4">
+<h4><strong>-Trampa 3</strong></h4>
+<p>El objetivo de este análisis es comparar el efecto individual de cada variable indicadora de degradación de hábitat sobre la diversidad alélica del CMH-1 de <em>P. pajaritus</em> de acuerdo con su distribución (i.e. zona templada y zona tropical).</p>
+<p>Inicialmente, se establece la distribución de la población en dos modelos: (1) zona templada mayor a 23.5 grados y (2) zona tropical menor a 23.5 grados, tomando como referencia el trópico de cáncer que se encuentra a 23.5 grados.</p>
+<p>Voy a eliminar la codificación de zonas latitudinales para no hacer tanto spam.</p>
+<p>Considero dos cosas con respecto a este análisis: <strong>1) está inflado el N, pues se toman los individuos como unidad de muestreo y no las poblaciones. 2) No es necesario separar por zonas, se puede hacer un solo modelo que evalúe el efecto de las variables sobre la diversidad genética de los pájaros en sus diferentes poblaciones.</strong></p>
+<p>Voy a hacer un modelo de regresión lineal que incluya las poblaciones como unidades de muestreo, y sin separar zonas según latitud:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(lme4)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>M<span class="fl">.1</span>_Poisson &lt;-<span class="st"> </span><span class="kw">glmer</span>(D <span class="op">~</span><span class="st"> </span>L <span class="op">+</span><span class="st"> </span>H1 <span class="op">+</span><span class="st"> </span>H2 <span class="op">+</span><span class="st"> </span>H3 <span class="op">+</span><span class="st"> </span>H4 <span class="op">+</span><span class="st"> </span>H5 <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>P), <span class="dt">family =</span> <span class="st">&quot;poisson&quot;</span>, <span class="dt">data =</span> Datos_tarea4)</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="kw">summary</span>(M<span class="fl">.1</span>_Poisson)</span></code></pre></div>
+<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: poisson  ( log )
+## Formula: D ~ L + H1 + H2 + H3 + H4 + H5 + (1 | P)
+##    Data: Datos_tarea4
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   3632.9   3668.1  -1808.5   3616.9      592 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -0.81008 -0.14956 -0.02672  0.12787  0.60558 
+## 
+## Random effects:
+##  Groups Name        Variance Std.Dev.
+##  P      (Intercept) 0.0436   0.2088  
+## Number of obs: 600, groups:  P, 60
+## 
+## Fixed effects:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  3.783041   0.029948 126.318  &lt; 2e-16 ***
+## L           -0.013137   0.042169  -0.312   0.7554    
+## H1          -0.070950   0.029757  -2.384   0.0171 *  
+## H2          -0.067558   0.032387  -2.086   0.0370 *  
+## H3          -0.007817   0.032098  -0.244   0.8076    
+## H4          -0.175699   0.030570  -5.747 9.06e-09 ***
+## H5           0.013568   0.031254   0.434   0.6642    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Correlation of Fixed Effects:
+##    (Intr) L      H1     H2     H3     H4    
+## L  -0.262                                   
+## H1  0.120 -0.258                            
+## H2  0.059  0.114  0.061                     
+## H3 -0.120 -0.109  0.018 -0.033              
+## H4 -0.074 -0.340 -0.049 -0.010 -0.095       
+## H5  0.127 -0.477  0.042  0.073 -0.075  0.028</code></pre>
+<p>Nuestros resultados indican que las variables indicadoras de degradación de hábitat, excepto H5, tienen un efecto negativo sobre la diversidad alélica del CMH-I de <em>P. pajaritus</em>. Además, las variables H1, H2 y H4 tienen un efecto negativo mayor que el resto de variables sobre la diversidad alélica.</p>
+</div>
+<div id="interpretación-de-resultado" class="section level4">
+<h4>Interpretación de resultado</h4>
+<p>De acuerdo con los resultados, las varibles H1, H2 y H4 tienen efecto <strong>significativo</strong> sobre la diversidad alélica del CMH1- de <em>P. pajaritus</em>. Es interesante comparar estos resultados con los análisis previamente analizados por la compañera, donde ella reportó que para zonas tropicales las variables que tenían efectos significativos eran H1, H4 y H5, mientras que para zonas templadas H1-H4 tenían efectos significativos sobre la variable respuesta.</p>
+<p>Si nos quedamos con el análisis separando las zonas según latitud algunas variables van a resultar significativas, otras no, y esto no contempla las poblaciones como unidades de muestreo, sino los individuos. Además, estamos dividiendo el análisis por variable, lo cual nos podría llevar a cometer error tipo II.</p>
+</div>
 </div>
 </section>
 
