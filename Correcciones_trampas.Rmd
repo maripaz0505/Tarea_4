@@ -1,0 +1,68 @@
+---
+title: "Tarea 4 - Curso Herramientas Prácticas para Investigación Reproducible"
+author: "Maripaz Castro-Murillo, Galit Akerman-Sánchez & Andrea Romero"
+date: "19/11/2020"
+output: 
+  prettydoc::html_pretty:
+    theme: lumen
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE, echo=FALSE}
+library(ggdag)
+library(lme4)
+library(ggplot2)
+library(readr)
+Datos_tarea4 <- read.csv("Datos_tarea4.csv")
+```
+
+
+
+```{r, include=FALSE, echo=FALSE}
+require(ggplot2)
+require(lme4)
+```
+
+```{r, include=FALSE, echo=TRUE}
+D <- Datos_tarea4$D
+
+L <- Datos_tarea4$L
+
+P <- Datos_tarea4$P
+
+H1 <- Datos_tarea4$H1
+H2 <- Datos_tarea4$H2
+H3 <- Datos_tarea4$H3
+H4 <- Datos_tarea4$H4
+H5 <- Datos_tarea4$H5
+
+```
+
+## **Análisis del modelo**
+
+#### **-Trampa 1**
+
+Con la finalidad de responder a la pregunta de investigación, se realizó un modelo mixto, cuya unidad de muestreo fueron las 60 poblaciones de *P. pajaritus*
+
+```{r, include=TRUE, echo=TRUE}  
+M.1 <- lmer(D ~ L + H1 + H2 + H3 + H4+ H5 + (1|P), data = Datos_tarea4)
+S.1 <- summary(M.1)
+S.1
+```
+
+#### Interpretación de resultados
+
+Nuestros resultados indican varias cosas: (1) las variables indicadoras de degradación de hábitat, excepto H5, tienen un efecto negativo sobre la diversidad alélica del CMH-I de *P. pajaritus*; y (2) las variables H1, H2 y H4 tienen un efecto negativo mayor que el resto de variables sobre la diversidad alélica.
+
+En el plot de los residuales del modelo linea existía un patrón y no una dispersión homogénea, por lo cual se propone la utilización de un modelo generalizado de la familia poisson, ya que como se puede notar en los histogramas, la variable respuesta es en realidad un conteo. A continuación se presenta el modelo poisson:
+
+```{r}
+library(lme4)
+M.1_Poisson <- glmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), family = "poisson", data = Datos_tarea4)
+summary(M.1_Poisson)
+```
+
