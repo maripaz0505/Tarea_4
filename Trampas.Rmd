@@ -60,10 +60,11 @@ Considero dos cosas con respecto a este análisis: **1) está inflado el N, pues
 Voy a hacer un modelo de regresión lineal que incluya las poblaciones como unidades de muestreo, y sin separar zonas según latitud:
 
 ```{r}
-lm(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), data = Datos_tarea4)
-S.3_corregido <- summary(M.3_corregido)
-S.3_corregido
+library(lme4)
+M.1_Poisson <- glmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), family = "poisson", data = Datos_tarea4)
+summary(M.1_Poisson)
 ```
+Nuestros resultados indican que las variables indicadoras de degradación de hábitat, excepto H5, tienen un efecto negativo sobre la diversidad alélica del CMH-I de *P. pajaritus*. Además, las variables H1, H2 y H4 tienen un efecto negativo mayor que el resto de variables sobre la diversidad alélica.
 
 
 #### Interpretación de resultado
