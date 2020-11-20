@@ -1,7 +1,7 @@
 ---
-title: "Tarea 4 - Curso Herramientas Practicas para Investigación Reproducible"
+title: "Tarea 4 - Curso Herramientas Prácticas para Investigación Reproducible"
 author: "Maripaz Castro-Murillo, Galit Akerman-Sánchez & Andrea Romero"
-date: "6/11/2020"
+date: "19/11/2020"
 output:
   prettydoc::html_pretty:
     theme: lumen
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, include=FALSE, echo=FALSE}
-libra
+library(rmdformats)
 library(ggdag)
 library(lme4)
 library(ggplot2)
@@ -132,7 +132,7 @@ head(Datos_tarea4) #La base con la variable nueva L.o integrada
 
 Podemos observar que el punto máximo es de 47.40 y el mínimo de -0.80. Es importante aclarar que revertir esta variable a su forma normal y no centrada en cero, no afecta en nada los resultados del experimento. Este acto fue realizado para poder separar aquellos individuos que se encuentran en zonas templadas y aquellos en zonas tropicales. 
 
-Ahora bien, se tomara como referencia el trópico de cáncer que se encuentra a 23.5 grados. Se puede confirmar ingresando al siguiente enlace [Coordenadas  Trópico de Cáncer](https://es.wikipedia.org/wiki/Tr%C3%B3pico_de_C%C3%A1ncer). Donde a valores en la variable L.o más altos que 23.5, se tomaran como zona templada, y más bajo que 23.5 como zona tropical. 
+Ahora bien, se tomará como referencia el trópico de cáncer que se encuentra a 23.5 grados. Se puede confirmar ingresando al siguiente enlace [Coordenadas  Trópico de Cáncer](https://es.wikipedia.org/wiki/Tr%C3%B3pico_de_C%C3%A1ncer). Donde a valores en la variable L.o más altos que 23.5, se tomaran como zona templada, y más bajo que 23.5 como zona tropical. 
 
 ```{r}
 Zona_templada<- subset(x = Datos_tarea4, subset = L.o > 23.5)
@@ -161,14 +161,14 @@ Se puede evidenciar, como algunas variables como la diversidad alélica presenta
 
 Para los modelos se utiliza el paquete [lmerTest](https://cran.r-project.org/web/packages/lmerTest/lmerTest.pdf). A su vez, la interpretación es apoyada por [este artículo](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0084162#s3) donde se utiliza e interpreta un modelo lineal mixto.   
 
-##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas templadas
+##### -Modelo para ver el efecto de la degradación del hábitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas templadas
 ```{r}
 M.Templado<- lm(D ~ L + H1 + H2 + H3 + H4 + H5, data = Zona_templada)
 summary(M.Templado)
 
 ```
 
-##### -Modelo para ver el efecto de la degradacion del habitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas tropicales
+##### -Modelo para ver el efecto de la degradación del hábitat y el efecto latitudinal en la diversidad alélica para poblaciones en zonas tropicales
 ```{r}
 M.Tropical <- lm(D ~ L + H1 + H2 + H3 + H4+ H5, data = Zona_tropical)
 summary(M.Tropical)
@@ -177,7 +177,7 @@ summary(M.Tropical)
 
 #### Interpretación de resultado
 
-Los resultados anteriores demuestran como  los indicadores de degradación del hábitat H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^) y H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) tienen significativamente un mayor efecto (de manera negativa) sobre la diversidad alelica en las poblaciones templadas que en las tropicales. Por otro lado, el indicador H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta significativamente (de manera positiva) mas la diversidad alélica del complejo CMH-I de *Pajaritus pajaritus* de zonas tropicales que en templadas.
+Los resultados anteriores demuestran como  los indicadores de degradación del hábitat H2 (se= -3.81, t-value= -7.38, p-value= 2.11e^-12^) y H3 (se= -2.29, t-value= -4.68, p-value= 4.65e^-06^) tienen significativamente un mayor efecto (de manera negativa) sobre la diversidad alélica en las poblaciones templadas que en las tropicales. Por otro lado, el indicador H5 (se= 1.10, t-value= 2.740, p-value= 0.0065) afecta significativamente (de manera positiva) más la diversidad alélica del CMH-I de *P. pajaritus* de zonas tropicales que en templadas.
 
 
 
