@@ -65,4 +65,35 @@ library(lme4)
 M.1_Poisson <- glmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), family = "poisson", data = Datos_tarea4)
 summary(M.1_Poisson)
 ```
+#### **-Trampa 3**
 
+El objetivo de este análisis es comparar el efecto individual de cada variable indicadora de degradación de hábitat sobre la diversidad alélica del CMH-1 de *P. pajaritus* de acuerdo con su distribución (i.e. zona templada y zona tropical).
+
+Inicialmente, se establece la distribución de la población en dos modelos: (1) zona templada mayor a 23.5 grados y (2) zona tropical menor a 23.5 grados, tomando como referencia el trópico de cáncer que se encuentra a 23.5 grados.
+
+Voy a eliminar la codificación de zonas latitudinales para no hacer tanto spam.
+
+```{r, include=FALSE}
+Datos_tarea4$L.o <- Datos_tarea4$L*10 + 20 #datos originales en grados
+summary(Datos_tarea4$L.o)
+
+Zona_templada<- subset(x = Datos_tarea4, subset = L.o > 23.5)
+Zona_tropical<- subset(x = Datos_tarea4, subset = L.o < 23.5)
+```
+
+Considero dos cosas con respecto a este análisis: **1) está inflado el N, pues se toman los individuos como unidad de muestreo y no las poblaciones. 2) No es necesario separar por zonas, se puede hacer un solo modelo que evalúe el efecto de las variables sobre la diversidad genética de los pájaros en sus diferentes poblaciones.**
+
+Voy a hacer un modelo de regresión lineal que incluya las poblaciones como unidades de muestreo, y sin separar zonas según latitud:
+
+```{r}
+library(lme4)
+M.1_Poisson <- glmer(D ~ L + H1 + H2 + H3 + H4 + H5 + (1|P), family = "poisson", data = Datos_tarea4)
+summary(M.1_Poisson)
+```
+Nuestros resultados indican que las variables indicadoras de degradación de hábitat, excepto H5, tienen un efecto negativo sobre la diversidad alélica del CMH-I de *P. pajaritus*. Además, las variables H1, H2 y H4 tienen un efecto negativo mayor que el resto de variables sobre la diversidad alélica.
+
+
+#### Interpretación de resultado
+De acuerdo con los resultados, las varibles H1, H2 y H4 tienen efecto  **significativo** sobre la diversidad alélica del CMH1- de *P. pajaritus*. Es interesante comparar estos resultados con los análisis previamente analizados por la compañera, donde ella reportó que para zonas tropicales las variables que tenían efectos significativos eran H1, H4 y H5, mientras que para zonas templadas H1-H4 tenían efectos significativos sobre la variable respuesta. 
+
+Si nos quedamos con el análisis separando las zonas según latitud algunas variables van a resultar significativas, otras no, y esto no contempla las poblaciones como unidades de muestreo, sino los individuos. Además, estamos dividiendo el análisis por variable, lo cual nos podría llevar a cometer error tipo II. 
