@@ -23,7 +23,7 @@ Datos_tarea4 <- read_csv("Datos_tarea4.csv")
 
 ## **Investigación**
 
-#### La presente investigación tiene como objetivo estudiar cómo la diversidad alélica (D) del complejo mayor de histocompatibilidad clase I (CMH-I) de la especie *Pajaritus pajaritus* se ve afectada por la degradación del hábitat (H). Esta especie presenta una amplia distribución desde zonas templadas hasta tropicales, donde se ha visto que en zonas templadas la degradación del hábitat es mayor que en zonas tropicales. A su vez, se ha evidenciado como la diversidad alélica del CMH-I es mayor en zonas tropicales, donde han evolucionado junto con una mayor diversidad de parásitos. 
+La presente investigación tiene como objetivo estudiar cómo la diversidad alélica (D) del complejo mayor de histocompatibilidad clase I (CMH-I) de la especie *Pajaritus pajaritus* se ve afectada por la degradación del hábitat (H). Esta especie presenta una amplia distribución desde zonas templadas hasta tropicales, donde se ha visto que en zonas templadas la degradación del hábitat es mayor que en zonas tropicales. A su vez, se ha evidenciado como la diversidad alélica del CMH-I es mayor en zonas tropicales, donde han evolucionado junto con una mayor diversidad de parásitos. 
 
 A continuación se muestra un diagrama causal como hipótesis donde L representa el efecto latitudinal. 
 
@@ -40,7 +40,7 @@ ggdag(dagified, layout = "circle") + theme_dag()
 
 ## **El estudio realizado**
 
-##### En un periodo de 10 años (A), el equipo trabajó con 60 poblaciones de esta especie, donde en cada una de estas poblaciones 10 individuos fueron muestreados.  Se cuantificaron 5 variables (H1-H5) como indicadores de la degradación del hábitat. A su vez, la variable L, representando el efecto latitudinal fue centrada en cero, al igual que H1 y H5.
+En un periodo de 10 años (A), el equipo trabajó con 60 poblaciones de esta especie, donde en cada una de estas poblaciones 10 individuos fueron muestreados.  Se cuantificaron 5 variables (H1-H5) como indicadores de la degradación del hábitat. A su vez, la variable L, representando el efecto latitudinal fue centrada en cero, al igual que H1 y H5.
 
 ## **Análisis de los datos**
 
